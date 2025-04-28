@@ -25,8 +25,13 @@
 
         flatpickr("#datePicker", {
           minDate: "today",
-          disable: busyDates
-        });
+          disable: busyDates,
+          onChange: function(selectedDates, dateStr, instance) {
+            // Send the selected date up to the parent (Jotform)
+            window.parent.postMessage(dateStr, "*");
+  } 
+});
+
       })
       .catch(error => console.error('Error fetching calendar events:', error));
   </script>
