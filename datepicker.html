@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ice Cream Cart Booking</title>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+  <h2>Select Your Event Date</h2>
+  <input type="text" id="datePicker" placeholder="Pick a date">
+
+  <script>
+    const API_KEY = 'AIzaSyB1gI-Y5-dKjcTJJOcNrb-iY34RaetU4Uk';
+    const CALENDAR_ID = '93d53a724dd0ed63e5f916d9f508829e755f40f2dc48c112da8f8d77fd06fdb8@group.calendar.google.com';
+
+    const today = new Date().toISOString();
+
+    fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${today}&singleEvents=true&orderBy=startTime`)
+      .then(response => response.json())
+      .then(data => {
+        const busyDates = data.items.map(event => {
+          return event.start.date; // Only using all-day events
+        });
+
+        flatpickr("#datePicker", {
+          minDate: "today",
+          disable: busyDates
+        });
+      })
+      .catch(error => console.error('Error fetching calendar events:', error));
+  </script>
+</body>
+</html>
